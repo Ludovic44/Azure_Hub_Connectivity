@@ -3,7 +3,7 @@
 
 variable "tenant_id" {
     type        = string
-    default     = "75046d40-2d4b-40d8-acaf-696b9e5679f8"
+    default     = "xxxxxxxxx"
     description = "Tenant ID"
 }
 
@@ -15,8 +15,8 @@ variable "location" {
 
 variable "environment" {
     type        = string
-    default     = "dev"
-    description = "Environment of deployed resource"
+    default     = "prod"
+    description = "Environment of deployed resources"
 }
 
 variable "tags" {
@@ -30,8 +30,8 @@ variable "tags" {
 
 variable "resource-group_name_common" {
     type        = string
-    default     = "rg-common-hub-prod-002"
-    description = "Resource group name"
+    default     = "rg-hub-common-prod-001"
+    description = "Common Resource group name"
 }
 
 
@@ -57,7 +57,7 @@ variable "vnet_iprange_hub" {
 # Resource group
 variable "resource-group_name_vpngateway" {
     type        = string
-    default     = "rg-vpngateway-hub-prod-001"
+    default     = "rg-hub-vpngateway-hub-prod-001"
     description = "Virtual Network Gateway resource group name"
 }
 
@@ -66,13 +66,6 @@ variable "public-ip_name" {
     type        = string
     default     = "pip-vpngateway-prod-001"
     description = "Public IP address name"
-}
-
-# Network Security Group
-variable "nsg_name_vpngateway" {
-    type        = string
-    default     = "nsg-vpngateway-hub-prod-001"
-    description = "VPN Gateway network security group name"
 }
 
 # Subnet
@@ -86,6 +79,13 @@ variable "subnet_iprange_vpngateway" {
     type        = string
     default     = "10.10.1.0/27"
     description = "VPN Gateway subnet IP range"
+}
+
+# VPN Gateway
+variable "vpngateway_name" {
+    type        = string
+    default     = "vpng-prod-001"
+    description = "VPN Gateway name"
 }
 
 # Local network gateway
@@ -107,15 +107,8 @@ variable "local-network-gateway_address-space_dc44" {
     description = "Local network gateway address space for DC44 site"
 }
 
-# VPN Gateway
-variable "vpngateway_name" {
-    type        = string
-    default     = "vpng-prod-001"
-    description = "VPN Gateway name"
-}
-
-# Sitte-to-site connection
-variable "vpngateway_connection_name" {
+# Site-to-site connection
+variable "dc44-to-vpngateway_connection_name" {
     type        = string
     default     = "cn-lgw-dc44-prod-001-to-vpng-prod-001"
     description = "Site-ti-site connection name"
@@ -128,21 +121,14 @@ variable "vpngateway_connection_name" {
 # Resource group
 variable "resource-group_name_firewall" {
     type        = string
-    default     = "rg-firewall-hub-prod-001"
+    default     = "rg-hub-firewall-prod-001"
     description = "Firewall resource group name"
-}
-
-# Network Security Group
-variable "nsg_name_firewall" {
-    type        = string
-    default     = "nsg-firewall-hub-prod-001"
-    description = "Firewall network security group name"
 }
 
 # Subnet
 variable "subnet_name_firewall" {
     type        = string
-    default     = "snet-firewall-hub-prod-001"
+    default     = "snet-hub-firewall-prod-001"
     description = "Firewall subnet name"
 }
 
@@ -150,6 +136,13 @@ variable "subnet-iprange_firewall" {
     type        = string
     default     = "10.10.2.0/26"
     description = "Firewall subnet IP range"
+}
+
+# Network Security Group
+variable "nsg_name_firewall" {
+    type        = string
+    default     = "nsg-hub-firewall-prod-001"
+    description = "Firewall network security group name"
 }
 
 # Firewall
@@ -166,14 +159,14 @@ variable "firewall_name" {
 # Resource group
 variable "resource-group_name_bastion" {
     type        = string
-    default     = "rg-bastion-hub-prod-001"
+    default     = "rg-hub-bastion-prod-001"
     description = "Bastion resource group name"
 }
 
 # Network Security Group
 variable "nsg_name_bastion" {
     type        = string
-    default     = "nsg-bastion-hub-prod-001"
+    default     = "nsg-hub-bastion-prod-001"
     description = "Bastion network security group name"
 }
 
@@ -204,21 +197,21 @@ variable "bastion_name" {
 # Resource group
 variable "resource-group_name_apim" {
     type        = string
-    default     = "rg-apim-hub-prod-001"
+    default     = "rg-hub-apim-prod-001"
     description = "APIM resource group name"
 }
 
 # Network Security Group
 variable "nsg_name_apim" {
     type        = string
-    default     = "nsg-apim-hub-prod-001"
+    default     = "nsg-hub-apim-prod-001"
     description = "APIM network security group name"
 }
 
 # Subnet
 variable "subnet_name_apim" {
     type        = string
-    default     = "snet-apim-hub-prod-001"
+    default     = "snet-hub-apim-prod-001"
     description = "APIM subnet name"
 }
 
@@ -242,21 +235,21 @@ variable "apim_name" {
 # Resource group
 variable "resource-group_name_natgateway" {
     type        = string
-    default     = "rg-natgateway-hub-prod-001"
+    default     = "rg-hub-natgateway-prod-001"
     description = "APIM resource group name"
 }
 
 # Network Security Group
 variable "nsg_name_natgateway" {
     type        = string
-    default     = "nsg-natgateway-hub-prod-001"
+    default     = "nsg-hub-natgateway-prod-001"
     description = "NAT Gateway network security group name"
 }
 
 # Subnet
 variable "subnet_name_natgateway" {
     type        = string
-    default     = "snet-natgateway-hub-prod-001"
+    default     = "snet-hub-natgateway-prod-001"
     description = "NAT Gateway subnet name"
 }
 

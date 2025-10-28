@@ -1,267 +1,195 @@
-# =========================================================
-# Global
+# VARIABLES DECLARATION
+# Name, Type, Description, Default value and metadata
+
+# ======================== GLOBAL ========================
+variable "environment" {
+  type        = string
+  description = "The environment in which all resources in this deployment should be created."
+  default     = "development"
+}
+
+variable "env" {
+  type        = string
+  description = "The environment abbreviation in which all resources in this deployment should be created."
+  default     = "dev"
+  validation {
+    condition     = contains(["sbx", "dev", "rct", "npd", "ppd", "prd", ], var.env)
+    error_message = "'env' variable must be one of the following values: 'basb', 'qual', 'rect', 'pprd' or 'prod'"
+  }
+}
 
 variable "tenant_id" {
-    type        = string
-    default     = "xxxxxxxxx"
-    description = "Tenant ID"
+  type        = string
+  description = "The Tenant ID in which all resources in this deployment should be created."
+  default     = ""
 }
+
+variable "subscription_id" {
+  type        = string
+  description = "The subscription ID in which all resources groups in this deployment should be created."
+  default     = ""
+}
+
+variable "client_id" {
+  type        = string
+  description = "The client ID use with provider AzureRM to deploy resources."
+  default     = ""
+}
+
+# variable "secret_id" {
+#   type        = string
+#   sensitive   = true
+#   description = "The secret of client ID use with provider AzureRM to deploy resources."
+#   default     = ""
+# }
 
 variable "location" {
-    type        = string
-    default     = "France Central"
-    description = "Location for all the resources"
+  type        = string
+  description = "The Azure Region in which all resources in this example should be created."
+  default     = "francecentral"
 }
 
-variable "environment" {
-    type        = string
-    default     = "prod"
-    description = "Environment of deployed resources"
+variable "loc" {
+  type        = string
+  description = "The Azure Region, on 3 characters, in which all resources in this example should be created."
+  default     = "frc"
 }
 
-variable "tags" {
-    type        = map(string)
-    default     = {
-        distribution = "hub"
-        environment = "production"
+variable "application" {
+  type        = string
+  description = "The application in which all resources in this example should be created."
+  default     = ""
+}
+
+variable "app" {
+  type        = string
+  description = "The abbreviation of the application in which all resources in this example should be created."
+  default     = ""
+}
+
+
+# ======================== NETWORK ========================
+# ------------------------  APP VNET ------------------------
+variable "app_network_resource_group_name" {
+  type        = string
+  description = "The name of the resource group in which all network resources will be created."
+  default     = ""
+}
+
+variable "app_vnet_frc_name" {
+  type        = string
+  description = "The name of the virtual network for Application spoke hosted in France central."
+  default     = ""
+}
+
+variable "app_vnet_frc_address_space" {
+  type        = list(string)
+  description = "The IP address space of virtual network of West Europe region."
+  default     = ["10.a.b.c/24"]
+}
+
+# ------------------------ SUBNETS ------------------------
+variable "app_subnets_frc" {
+  type = map(object(
+    {
+      address_prefixes = list(string) # (Required) The address prefixes to use for the subnet.
+      # delegation
+      service_delegation = bool
+      delegations = optional(object(
+        {
+          name = string # (Required) A name for this delegation.
+          service_delegation = object({
+            name    = string                 # (Required) The name of service to delegate to. Possible values include `Microsoft.ApiManagement/service`, `Microsoft.AzureCosmosDB/clusters`, `Microsoft.BareMetal/AzureVMware`, `Microsoft.BareMetal/CrayServers`, `Microsoft.Batch/batchAccounts`, `Microsoft.ContainerInstance/containerGroups`, `Microsoft.ContainerService/managedClusters`, `Microsoft.Databricks/workspaces`, `Microsoft.DBforMySQL/flexibleServers`, `Microsoft.DBforMySQL/serversv2`, `Microsoft.DBforPostgreSQL/flexibleServers`, `Microsoft.DBforPostgreSQL/serversv2`, `Microsoft.DBforPostgreSQL/singleServers`, `Microsoft.HardwareSecurityModules/dedicatedHSMs`, `Microsoft.Kusto/clusters`, `Microsoft.Logic/integrationServiceEnvironments`, `Microsoft.MachineLearningServices/workspaces`, `Microsoft.Netapp/volumes`, `Microsoft.Network/managedResolvers`, `Microsoft.Orbital/orbitalGateways`, `Microsoft.PowerPlatform/vnetaccesslinks`, `Microsoft.ServiceFabricMesh/networks`, `Microsoft.Sql/managedInstances`, `Microsoft.Sql/servers`, `Microsoft.StoragePool/diskPools`, `Microsoft.StreamAnalytics/streamingJobs`, `Microsoft.Synapse/workspaces`, `Microsoft.Web/hostingEnvironments`, `Microsoft.Web/serverFarms`, `NGINX.NGINXPLUS/nginxDeployments` and `PaloAltoNetworks.Cloudngfw/firewalls`.
+            actions = optional(list(string)) # (Optional) A list of Actions which should be delegated. This list is specific to the service to delegate to. Possible values include `Microsoft.Network/networkinterfaces/*`, `Microsoft.Network/virtualNetworks/subnets/action`, `Microsoft.Network/virtualNetworks/subnets/join/action`, `Microsoft.Network/virtualNetworks/subnets/prepareNetworkPolicies/action` and `Microsoft.Network/virtualNetworks/subnets/unprepareNetworkPolicies/action`.
+          })
+        }
+        )
+      )
+
     }
-    description = "Tags to apply to resources groupe and resources"
-}
-
-variable "resource-group_name_common" {
-    type        = string
-    default     = "rg-hub-common-prod-001"
-    description = "Common Resource group name"
+  ))
+  description = "Subnets list to create"
 }
 
 
-# =========================================================
-# VIRTUAL NETWORK
-
-variable "vnet_name_hub" {
-    type        = string
-    default     = "vnet-hub-prod-1010-001"
-    description = "Hub VNet name"
+# ------------------------ NSG ------------------------
+variable "network_security_group" {
+  type = map(object({
+    name = string
+    # resource_group = string
+    security_rule = map(object({
+      name                       = string
+      description                = optional(string)
+      priority                   = number
+      direction                  = string
+      access                     = string
+      protocol                   = string
+      source_port_range          = optional(string, "*")
+      destination_port_range     = optional(string, "*")
+      source_address_prefix      = optional(string, "*")
+      destination_address_prefix = optional(string, "*")
+    }))
+  }))
 }
 
-variable "vnet_iprange_hub" {
-    type        = string
-    default     = "10.10.0.0/16"
-    description = "Hub VNet IP range"
-}
-
-
-# =========================================================
-# VIRTUAL NETWORK GATEWAY
-
-# Resource group
-variable "resource-group_name_vpngateway" {
-    type        = string
-    default     = "rg-hub-vpngateway-hub-prod-001"
-    description = "Virtual Network Gateway resource group name"
-}
-
-# Public IP address
-variable "public-ip_name" {
-    type        = string
-    default     = "pip-vpngateway-prod-001"
-    description = "Public IP address name"
-}
-
-# Subnet
-variable "subnet_name_vpngateway" {
-    type        = string
-    default     = "GatewaySubnet"
-    description = "VPN Gateway subnet name"
-}
-
-variable "subnet_iprange_vpngateway" {
-    type        = string
-    default     = "10.10.1.0/27"
-    description = "VPN Gateway subnet IP range"
-}
-
-# VPN Gateway
-variable "vpngateway_name" {
-    type        = string
-    default     = "vpng-prod-001"
-    description = "VPN Gateway name"
-}
-
-# Local network gateway
-variable "local-network-gateway_name" {
-    type        = string
-    default     = "lgw-dc44-prod"
-    description = "Local network gateway name"
-}
-
-variable "local-network-gateway_ip-address" {
-    type        = string
-    default     = "168.62.225.23"
-    description = "Local network gateway IP address for DC44 site"
-}
-
-variable "local-network-gateway_address-space_dc44" {
-    type        = string
-    default     = "192.168.10.0/24"
-    description = "Local network gateway address space for DC44 site"
-}
-
-# Site-to-site connection
-variable "dc44-to-vpngateway_connection_name" {
-    type        = string
-    default     = "cn-lgw-dc44-prod-001-to-vpng-prod-001"
-    description = "Site-ti-site connection name"
+variable "subnet_nsg_association" {
+  type = list(object({
+    name                   = string
+    network_security_group = string
+  }))
 }
 
 
-# =========================================================
-# FIREWALL
-
-# Resource group
-variable "resource-group_name_firewall" {
-    type        = string
-    default     = "rg-hub-firewall-prod-001"
-    description = "Firewall resource group name"
+# ======================== FIREWALL ========================
+variable "app_firewall_resource_group_name" {
+  type        = string
+  description = "The name of the resource group in which all network resources will be created."
+  default     = ""
 }
-
-# Subnet
-variable "subnet_name_firewall" {
-    type        = string
-    default     = "snet-hub-firewall-prod-001"
-    description = "Firewall subnet name"
-}
-
-variable "subnet-iprange_firewall" {
-    type        = string
-    default     = "10.10.2.0/26"
-    description = "Firewall subnet IP range"
-}
-
-# Network Security Group
-variable "nsg_name_firewall" {
-    type        = string
-    default     = "nsg-hub-firewall-prod-001"
-    description = "Firewall network security group name"
-}
-
-# Firewall
-variable "firewall_name" {
-    type        = string
-    default     = "afw-prod-001"
-    description = "Firewall name"
+variable "app_firewall_name" {
+  type        = string
+  description = "The name of the resource group in which all network resources will be created."
+  default     = ""
 }
 
 
-# =========================================================
-# BASTION
-
-# Resource group
-variable "resource-group_name_bastion" {
-    type        = string
-    default     = "rg-hub-bastion-prod-001"
-    description = "Bastion resource group name"
+# ======================== BASTION ========================
+variable "app_bastion_resource_group_name" {
+  type        = string
+  description = "The name of the resource group in which all network resources will be created."
+  default     = ""
 }
 
-# Network Security Group
-variable "nsg_name_bastion" {
-    type        = string
-    default     = "nsg-hub-bastion-prod-001"
-    description = "Bastion network security group name"
-}
-
-# Subnet
-variable "subnet_name_bastion" {
-    type        = string
-    default     = "AzureBastionSubnet"
-    description = "Bastion subnet name"
-}
-
-variable "subnet_iprange_bastion" {
-    type        = string
-    default     = "10.10.3.0/26"
-    description = "Bastion subnet IP range"
-}
-
-# Bastion
-variable "bastion_name" {
-    type        = string
-    default     = "bas-prod-001"
-    description = "Bastion name"
+variable "app_bastion_name" {
+  type        = string
+  description = "The name of the resource group in which all network resources will be created."
+  default     = ""
 }
 
 
-# =========================================================
-# APIM
-
-# Resource group
-variable "resource-group_name_apim" {
-    type        = string
-    default     = "rg-hub-apim-prod-001"
-    description = "APIM resource group name"
+# ======================== DNS ========================
+variable "app_dns_resource_group_name" {
+  type        = string
+  description = "The name of the resource group in which all network resources will be created."
+  default     = ""
 }
 
-# Network Security Group
-variable "nsg_name_apim" {
-    type        = string
-    default     = "nsg-hub-apim-prod-001"
-    description = "APIM network security group name"
-}
-
-# Subnet
-variable "subnet_name_apim" {
-    type        = string
-    default     = "snet-hub-apim-prod-001"
-    description = "APIM subnet name"
-}
-
-variable "subnet_iprange_apim" {
-    type        = string
-    default     = "10.10.4.0/26"
-    description = "APIM subnet IP range"
-}
-
-# APIM
-variable "apim_name" {
-    type        = string
-    default     = "apim-prod-001"
-    description = "APIM name"
+variable "app_dns_name" {
+  type        = string
+  description = "The name of the resource group in which all network resources will be created."
+  default     = ""
 }
 
 
-# =========================================================
-# NAT GATEWAY
-
-# Resource group
-variable "resource-group_name_natgateway" {
-    type        = string
-    default     = "rg-hub-natgateway-prod-001"
-    description = "APIM resource group name"
+# ======================== APP GATEWAY ========================
+variable "app_gateway_resource_group_name" {
+  type        = string
+  description = "The name of the resource group in which all network resources will be created."
+  default     = ""
 }
 
-# Network Security Group
-variable "nsg_name_natgateway" {
-    type        = string
-    default     = "nsg-hub-natgateway-prod-001"
-    description = "NAT Gateway network security group name"
-}
-
-# Subnet
-variable "subnet_name_natgateway" {
-    type        = string
-    default     = "snet-hub-natgateway-prod-001"
-    description = "NAT Gateway subnet name"
-}
-
-variable "subnet_iprange_natgateway" {
-    type        = string
-    default     = "10.10.5.0/24"
-    description = "NAT Gateway subnet IP range"
-}
-
-# NAT Gateway
-variable "natgateway_name" {
-    type        = string
-    default     = "ng-prod-001"
-    description = "NAT Gateway name"
+variable "app_gateway_name" {
+  type        = string
+  description = "The name of the resource group in which all network resources will be created."
+  default     = ""
 }

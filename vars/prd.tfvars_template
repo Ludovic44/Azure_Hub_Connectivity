@@ -1,0 +1,228 @@
+# ======================== GLOBAL ========================
+tenant_id       = "xxxxxxxxxxx"
+
+environment     = "production"
+env             = "prd"
+
+subscription_id = "xxxxxxxxxxx"
+client_id = "xxxxxxxxxxx"
+# secret_id = "xxxxxxxxxxx"
+
+
+# ======================== VIRTUAL NETWORK ========================
+# ------------------------ FRC ------------------------
+app_vnet_frc_address_space       = ["10.100.0.0/16"]
+
+# ======================== SUBNET ========================
+# ------------------------ FRC ------------------------
+app_subnets_frc = {
+
+  AzureFirewallSubnet = {
+    address_prefixes = ["10.100.0.0/26"]
+    service_delegation  = false
+    # delegations = {
+    #   name          = "delegation"
+    #   service_delegation = {
+    #     name = "Microsoft.DevOpsInfrastructure/pools"
+    #     actions = ["Microsoft.Network/virtualNetworks/subnets/action"]
+    #   },
+    # },
+  },
+  AzureFirewallManagementSubnet = {
+    address_prefixes = ["10.100.0.64/26"]
+    service_delegation  = false
+  },
+  GatewaySubnet = {
+    address_prefixes = ["10.100.0.128/26"]
+    service_delegation  = false
+  },
+  AzureBastionSubnet = {
+    address_prefixes = ["10.100.0.192/26"]
+    service_delegation  = false
+  },
+  snet-hub-appgateway-prd-01 = {
+    address_prefixes = ["10.100.1.0/24"]
+    service_delegation  = false
+  },
+  snet-hub-appgateway-npd-01 = {
+    address_prefixes = ["10.100.2.0/24"]
+    service_delegation  = false
+  },
+  snet-hub-dnsprinbound-endpoint-prd-01 = {
+    address_prefixes = ["10.100.3.0/28"]
+    service_delegation  = false
+  },
+  snet-hub-dnsproutbound-endpoint-prd-01 = {
+    address_prefixes = ["10.100.3.16/28"]
+    service_delegation  = false
+  },
+}
+
+
+# ======================== NETWORK SECURITY GROUPS ========================
+network_security_group = {
+  nsg-hub-bastion-prd-01 = {
+    name           = "nsg-hub-bastion-prd-01"
+    security_rule = {
+      allow-ssh = {
+        name                       = "Allow-SSH"
+        description                = "Allow SSH from admin network"
+        priority                   = 100
+        direction                  = "Inbound"
+        access                     = "Allow"
+        protocol                   = "Tcp"
+        source_port_range          = "*"
+        destination_port_range     = "22"
+        source_address_prefix      = "10.50.1.0/24"
+        destination_address_prefix = "*"
+      },
+      deny-internal = {
+        name                       = "Deny-Internal"
+        description                = "Example deny"
+        priority                   = 300
+        direction                  = "Inbound"
+        access                     = "Deny"
+        protocol                   = "*"
+        source_port_range          = "*"
+        destination_port_range     = "*"
+        source_address_prefix      = "0.0.0.0/0"
+        destination_address_prefix = "*"
+      }
+    }
+  },
+  nsg-hub-appgateway-prd-01 = {
+    name           = "nsg-hub-appgateway-prd-01"
+    security_rule = {
+      allow-ssh = {
+        name                       = "Allow-SSH"
+        description                = "Allow SSH from admin network"
+        priority                   = 100
+        direction                  = "Inbound"
+        access                     = "Allow"
+        protocol                   = "Tcp"
+        source_port_range          = "*"
+        destination_port_range     = "22"
+        source_address_prefix      = "10.50.1.0/24"
+        destination_address_prefix = "*"
+      }
+    }
+  },
+  nsg-hub-appgateway-npd-01 = {
+    name           = "nsg-hub-appgateway-npd-01"
+    security_rule = {
+      allow-ssh = {
+        name                       = "Allow-SSH"
+        description                = "Allow SSH from admin network"
+        priority                   = 100
+        direction                  = "Inbound"
+        access                     = "Allow"
+        protocol                   = "Tcp"
+        source_port_range          = "*"
+        destination_port_range     = "22"
+        source_address_prefix      = "10.50.1.0/24"
+        destination_address_prefix = "*"
+      }
+    }
+  },
+  nsg-hub-dnsprinbound-prd-01 = {
+    name           = "nsg-hub-dnsprinbound-prd-01"
+    security_rule = {
+      deny-internal = {
+        name                       = "Deny-Internal"
+        description                = "Example deny"
+        priority                   = 300
+        direction                  = "Inbound"
+        access                     = "Deny"
+        protocol                   = "*"
+        source_port_range          = "*"
+        destination_port_range     = "*"
+        source_address_prefix      = "0.0.0.0/0"
+        destination_address_prefix = "*"
+      }
+    }
+  },
+  nsg-hub-dnsproutbound-prd-01 = {
+    name           = "nsg-hub-dnsproutbound-prd-01"
+    security_rule = {
+      deny-internal = {
+        name                       = "Deny-Internal"
+        description                = "Example deny"
+        priority                   = 300
+        direction                  = "Inbound"
+        access                     = "Deny"
+        protocol                   = "*"
+        source_port_range          = "*"
+        destination_port_range     = "*"
+        source_address_prefix      = "0.0.0.0/0"
+        destination_address_prefix = "*"
+      }
+    }
+  },
+}
+
+# ======================== NSG ASSOCIATION ========================
+subnet_nsg_association = [
+  # {
+  #   name = "AzureBastionSubnet"
+  #   network_security_group = "nsg-hub-bastion-prd-01"
+  # },
+  {
+    name = "snet-hub-appgateway-prd-01"
+    network_security_group = "nsg-hub-appgateway-prd-01"
+  },
+    {
+    name = "snet-hub-appgateway-npd-01"
+    network_security_group = "nsg-hub-appgateway-npd-01"
+  },
+  {
+    name = "snet-hub-dnsprinbound-endpoint-prd-01"
+    network_security_group = "nsg-hub-dnsprinbound-prd-01"
+  },
+    {
+    name = "snet-hub-dnsproutbound-endpoint-prd-01"
+    network_security_group = "nsg-hub-dnsproutbound-prd-01"
+  }
+]
+
+# nsg_name = {
+#   {
+#     name             = "nsg-hub-infra-prd-01"
+#     security_rule = security_rule {
+#             name                       = "test123"
+#             priority                   = 100
+#             direction                  = "Inbound"
+#             access                     = "Allow"
+#             protocol                   = "Tcp"
+#             source_port_range          = "*"
+#             destination_port_range     = "*"
+#             source_address_prefix      = "*"
+#             destination_address_prefix = "*"
+#           }
+#         security_rule    {
+#             name                       = "SSHnew"
+#             priority                   = 1101
+#             direction                  = "Inbound"
+#             access                     = "Allow"
+#             protocol                   = "Tcp"
+#             source_port_range          = "*"
+#             destination_port_range     = "6666"
+#             source_address_prefix      = "*"
+#             destination_address_prefix = "*"
+#         }
+#   },
+
+
+
+#   {
+#     name             = "nsg-hub-frontend-prd-01"
+#     address_prefixes = ["10.110.4.0/28"]
+#   },
+#   {
+#     name             = "nsg-hub-backend-prd-01"
+#     address_prefixes = ["10.110.4.0/28"]
+#   },
+#   {
+#     name             = "nsg-hub-data-prd-01"
+#     address_prefixes = ["10.110.4.0/28"]
+#   },
+# ]

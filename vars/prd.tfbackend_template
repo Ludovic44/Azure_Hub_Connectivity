@@ -1,0 +1,5 @@
+subscription_id       = "xxxxxxxxxxx"
+resource_group_name   = "rg-xxxxxxxxxxx"
+storage_account_name  = "saxxxxxxxxxxx"
+container_name        = "xxxxxxxxxxx"
+key                   = "xxxxxxxxxxx.tfstate"

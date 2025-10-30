@@ -146,6 +146,7 @@ variable "app_firewall_resource_group_name" {
   description = "The name of the resource group in which all network resources will be created."
   default     = ""
 }
+
 variable "app_firewall_name" {
   type        = string
   description = "The name of the resource group in which all network resources will be created."
@@ -166,6 +167,12 @@ variable "app_bastion_name" {
   default     = ""
 }
 
+variable "pip_bastion_name" {
+  type        = string
+  description = "The name of the public IP address for the Bastion host."
+  default     = ""
+}
+
 
 # ======================== DNS ========================
 variable "app_dns_resource_group_name" {
@@ -174,22 +181,49 @@ variable "app_dns_resource_group_name" {
   default     = ""
 }
 
-variable "app_dns_name" {
+variable "app_dnsprivateresolver_name" {
   type        = string
-  description = "The name of the resource group in which all network resources will be created."
+  description = "The name of the DNS private resolver."
+  default     = ""
+}
+
+# variable "app_dnsprivatezones" {
+#   type = map(object(
+#     {
+#       # delegation
+#       vnet_link = bool
+#     }
+#   ))
+#   description = "Private DNS zones to create"
+# }
+
+// Variable for private DNS zones
+variable "app_dnsprivatezones" {
+  description = "Settings for private DNS zones"
+  type = list(object({
+    zone_name = string
+    vnet_link = bool
+  }))
+}
+
+
+# ======================== GATEWAY ========================
+variable "app_gateway_resource_group_name" {
+  type        = string
+  description = "The name of the gateway resource group in which all VON and ER resources will be created."
   default     = ""
 }
 
 
 # ======================== APP GATEWAY ========================
-variable "app_gateway_resource_group_name" {
+variable "app_appgateway_resource_group_name" {
   type        = string
-  description = "The name of the resource group in which all network resources will be created."
+  description = "The name of the resource group in which all application gateway resources will be created."
   default     = ""
 }
 
-variable "app_gateway_name" {
+variable "app_appgateway_name" {
   type        = string
-  description = "The name of the resource group in which all network resources will be created."
+  description = "The name of the application gateway."
   default     = ""
 }

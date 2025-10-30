@@ -13,27 +13,37 @@ locals {
   }
 
   # ======================== VIRTUAL NETWORK ========================
-  app_network_resource_group_name = "rg-${local.app}-network-${var.env}-001"
-  app_vnet_frc_name               = "vnet-${local.app}-${var.loc}-${var.env}-001"
+  app_network_resource_group_name = "rg-${local.app}-network-${var.env}-01"
+  app_vnet_frc_name               = "vnet-${local.app}-${var.loc}-${var.env}-01"
+  pip_firewall_name               = "pip-${local.application}-firewall-${var.env}-01"
 
 
   # ======================== FIREWALL ========================
-  app_firewall_resource_group_name = "rg-${local.app}-firewall-${var.env}-001"
-  app_firewall_name                = "fw-${local.app}-${var.loc}-${var.env}-001"
+  app_firewall_resource_group_name = "rg-${local.app}-firewall-${var.env}-01"
+  app_firewall_name                = "fw-${local.app}-${var.loc}-${var.env}-01"
 
 
   # ======================== BASTION ========================
-  app_bastion_resource_group_name = "rg-${local.app}-bastion-${var.env}-001"
-  app_bastion_name                = "bas-${local.app}-${var.loc}-${var.env}-001"
+  app_bastion_resource_group_name = "rg-${local.app}-bastion-${var.env}-01"
+  app_bastion_name                = "bas-${var.env}-01"
+  pip_bastion_name                = "pip-${local.application}-bastion-${var.env}-01"
 
 
-  # ======================== DNS ========================
-  app_dns_resource_group_name = "rg-${local.app}-dns-${var.env}-001"
-  app_dns_name                = "dns-${local.app}-${var.loc}-${var.env}-001"
+  # ======================== DNS PRIVATE RESOLVER ========================
+  app_dns_resource_group_name = "rg-${local.app}-dns-${var.env}-01"
+  app_dnsprivateresolver_name = "dnspr-${var.env}-01"
+
+
+  # ======================== PRIVATE DNS ZONE ========================
+  # app_dns_name                = "dns-${var.env}-01"
+
+
+  # ======================== GATEWAY ========================
+  app_gateway_resource_group_name = "rg-${local.app}-gateway-${var.env}-01"
 
 
   # ======================== APP GATEWAY ========================
-  app_gateway_resource_group_name = "rg-${local.app}-appgateway-${var.env}-001"
-  app_gateway_name                = "ag-${local.app}-${var.loc}-${var.env}-001"
+  app_appgateway_resource_group_name = "rg-${local.app}-appgateway-${var.env}-01"
+  app_appgateway_name                = "agw-${var.env}-01"
 
 }

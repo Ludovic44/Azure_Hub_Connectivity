@@ -3,6 +3,9 @@ locals {
 
   application = "hub-connectivity"
   app         = "hub"
+ 
+  role             = "shared"
+  role_abreviation = "shrd"
 
   tags = {
     environment   = var.environment
@@ -18,6 +21,19 @@ locals {
   pip_firewall_name               = "pip-${local.application}-firewall-${var.env}-01"
 
 
+  # ======================== SECURITY ========================
+  app_keyvault_resource_group_name = "rg-${local.app}-security-${var.env}-01"
+  app_keyvault_name                = "kv-${local.app}${var.loc}${var.env}-01"
+
+
+  # ======================== NVA VM ========================
+  app_nva_vm_resource_group_name = "rg-${local.app}-nva-${var.env}-01"
+  app_nva_vm_nic_name                = "nic-${local.app_nva_vm}"
+  app_nva_vm = "vm-${local.application}-${local.role}-${var.env}-001"
+  app_nva_vm_osdisk_name                              = "osdisk-${local.app_nva_vm}"
+  app_nva_vm_admin_username                           = "adm-vm-orchestration-${var.env}"
+ 
+ 
   # ======================== FIREWALL ========================
   app_firewall_resource_group_name = "rg-${local.app}-firewall-${var.env}-01"
   app_firewall_name                = "fw-${local.app}-${var.loc}-${var.env}-01"

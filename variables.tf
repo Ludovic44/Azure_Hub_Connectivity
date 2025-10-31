@@ -139,6 +139,12 @@ variable "subnet_nsg_association" {
   }))
 }
 
+# ======================== NVA VM ========================
+variable "app_nva_vm_orchestration_size" {
+  type        = string
+  description = "The orchestration size for the NVA VM."
+  default     = "Standard_B2ms"
+}
 
 # ======================== FIREWALL ========================
 variable "app_firewall_resource_group_name" {

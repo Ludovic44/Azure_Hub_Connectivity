@@ -42,8 +42,53 @@ locals {
   app_gateway_resource_group_name = "rg-${local.app}-gateway-${var.env}-01"
 
 
+
+
   # ======================== APP GATEWAY ========================
   app_appgateway_resource_group_name = "rg-${local.app}-appgateway-${var.env}-01"
-  app_appgateway_name                = "agw-${var.env}-01"
+  # ------------------------ NO PRODUCTION ------------------------
+  lb_noprod_resource_group_name = "rg-${local.application}-loadbalancing-noprod-001"
+  # ........................ PUBLIC IP ........................
+  pip_appgateway_noprod_name = "pip-${local.application}-appgateway-noprod-001"
+  # ........................ APPLICATION GATEWAY ........................
+  appgateway_noprod_name                        = "agw-noprod-001"
+  appgateway_noprod_sku                         = "WAF_v2"
+  appgateway_noprod_autoscale_configuration_min = 2
+  appgateway_noprod_autoscale_configuration_max = 10
+  appgateway_noprod_ip_configuration_name       = "appgw-noprod-ip-config"
+  appgateway_noprod_policy_mode                 = "Detection" #Detection for NoProd and Prevention for Production
+  # ........................ FRONTEND ........................ 
+  appgateway_noprod_frontend_ip_configuration_name = "frontend-ip-appgw-noprod"
+  appgateway_noprod_frontend_port_name             = "frontend-port-appgw-noprod"
+  # ........................ BACKEND ........................
+  # ExploreApp
+  appgateway_noprod_exploreapp_backend_address_pool_name  = "backend-exploreapp-frontend-noprod-01"
+  appgateway_noprod_exploreapp_backend_ip_address         = ["10.0.1.53"]
+  appgateway_noprod_exploreapp_backend_http_settings_name = "http-settings-exploreapp-noprod-01"
+  appgateway_noprod_exploreapp_backend_http_settings_path = "/path1/"
+  # ........................ LISTENER ........................
+  # ExploreApp
+  appgateway_noprod_exploreapp_http_listener_name = "http-listener-exploreapp-noprod-01"
+  # appgateway_noprod_http_listener_frontend_ip_configuration_name = "appgw-noprod-frontend-ip"
+  # appgateway_noprod_http_listener_frontend_port_name             = "appgw-noprod-frontend-port"
+  # ........................ ROUTING ........................
+  # ExploreApp
+  # appgateway_noprod_routing_name                       = "appgw-noprod-routing-rule"
+  appgateway_noprod_exploreapp_routing_name      = "routing-rule-exploreapp-noprod-01"
+  appgateway_noprod_exploreapp_routing_rule_type = "Basic"
+  # appgateway_noprod_exploreapp_routing_http_listener_name         = "http-listener-exploreapp-noprod-01"
+  appgateway_noprod_exploreapp_routing_http_listener_name = local.appgateway_noprod_exploreapp_http_listener_name
+  # appgateway_noprod_exploreapp_routing_backend_address_pool_name  = "backend-exploreapp-frontend-noprod-01"
+  appgateway_noprod_exploreapp_routing_backend_address_pool_name = local.appgateway_noprod_exploreapp_backend_address_pool_name
+  # appgateway_noprod_exploreapp_routing_backend_http_settings_name = "http-settings-exploreapp-noprod-01"
+  appgateway_noprod_exploreapp_routing_backend_http_settings_name = local.appgateway_noprod_exploreapp_backend_http_settings_name
+  # ........................ POLICY ........................
+  # ExploreApp
+  appgateway_noprod_waf_policy_name = "wafp-exploreapp-noprod-001"
 
+
+
+  # ------------------------ PRODUCTION ------------------------
+  lb_prod_resource_group_name = "rg-${local.application}-loadbalancing-${var.env}-001"
+  
 }

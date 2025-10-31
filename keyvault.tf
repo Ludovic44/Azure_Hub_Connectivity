@@ -1,7 +1,7 @@
 resource "azurerm_resource_group" "app_security" {
   name     = local.app_keyvault_resource_group_name
   location = var.location
-  tags = merge(local.tags, { creation_date = "2025-10-31" })
+  tags     = merge(local.tags, { creation_date = "2025-10-31" })
 }
 
 
@@ -16,8 +16,8 @@ resource "azurerm_key_vault" "app" {
   purge_protection_enabled    = false
   # enable_rbac_authorization   = true
   rbac_authorization_enabled = true
-  sku_name                    = "standard"
-  tags                        = merge(local.tags, { creation_date = "2025-10-31" })
+  sku_name                   = "standard"
+  tags                       = merge(local.tags, { creation_date = "2025-10-31" })
 }
 
 resource "tls_private_key" "ssh_key" {

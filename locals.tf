@@ -3,7 +3,7 @@ locals {
 
   application = "hub-connectivity"
   app         = "hub"
- 
+
   role             = "shared"
   role_abreviation = "shrd"
 
@@ -28,12 +28,12 @@ locals {
 
   # ======================== NVA VM ========================
   app_nva_vm_resource_group_name = "rg-${local.app}-nva-${var.env}-01"
-  app_nva_vm_nic_name                = "nic-${local.app_nva_vm}"
-  app_nva_vm = "vm-${local.application}-${local.role}-${var.env}-001"
-  app_nva_vm_osdisk_name                              = "osdisk-${local.app_nva_vm}"
-  app_nva_vm_admin_username                           = "adm-vm-orchestration-${var.env}"
- 
- 
+  app_nva_vm_nic_name            = "nic-${local.app_nva_vm}"
+  app_nva_vm                     = "vm-${local.application}-${local.role}-${var.env}-001"
+  app_nva_vm_osdisk_name         = "osdisk-${local.app_nva_vm}"
+  app_nva_vm_admin_username      = "adm-vm-orchestration-${var.env}"
+
+
   # ======================== FIREWALL ========================
   app_firewall_resource_group_name = "rg-${local.app}-firewall-${var.env}-01"
   app_firewall_name                = "fw-${local.app}-${var.loc}-${var.env}-01"
@@ -106,5 +106,5 @@ locals {
 
   # ------------------------ PRODUCTION ------------------------
   lb_prod_resource_group_name = "rg-${local.application}-loadbalancing-${var.env}-001"
-  
+
 }
